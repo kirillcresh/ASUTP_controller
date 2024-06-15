@@ -1,0 +1,30 @@
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+.centered {
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -40%);
+  text-align: center;
+}
+
+h1 {
+  line-height: 10px;
+  font-size: x-large;
+}
+
+button {
+  font-family: 'Inter', sans-serif;
+  border: 100px #009df1;
+  background-color: #f0f2f5;
+  cursor: pointer;
+  padding: 10px 20px;
+  font-size: large;
+  border-radius: 10px;
+}
+
+button:hover {
+  background-color: #c5c5c5;
+}
