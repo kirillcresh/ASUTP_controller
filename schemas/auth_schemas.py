@@ -28,6 +28,15 @@ class RegistrationBodySchema(BaseModel):
         return validate_password(password=password)
 
 
+class RegistrationResponse(BaseModel):
+    id: int
+    name: str
+    login: str
+
+    class Config:
+        orm_mode = True
+
+
 class LoginBodySchema(BaseModel):
     login: str = Field(
         description="Логин пользователя", min_length=3, max_length=32

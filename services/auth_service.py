@@ -11,7 +11,7 @@ from loggers.logger import (
     logger_decorator,
 )
 from models.user_model import User
-from schemas.auth_schemas import RegistrationBodySchema, LoginBodySchema, AuthorizationResponse
+from schemas.auth_schemas import RegistrationBodySchema, LoginBodySchema, AuthorizationResponse, RegistrationResponse
 from schemas.token_schema import UserPayload
 from security_manager import SecurityManager
 
@@ -44,7 +44,7 @@ class AuthService(BaseService):
             access_token=access_token, refresh_token=refresh_token
         )
 
-    async def registration(self, dto: RegistrationBodySchema):
+    async def registration(self, dto: RegistrationBodySchema) -> RegistrationResponse:
         user = (
             await self.session.execute(select(User).where(func.lower(User.login) == dto.login.lower()))
         ).scalar_one_or_none()
@@ -64,9 +64,9 @@ class AuthService(BaseService):
             )
         ).scalar_one_or_none()
         await self.session.commit()
-        return user
+        return RegistrationResponse.from_orm(user)
 
-    async def login(self, dto: LoginBodySchema):
+    async def login(self, dto: LoginBodySchema) -> AuthorizationResponse:
         user = (
             await self.session.execute(
                 select(User).where(func.lower(User.login) == dto.login.lower())

@@ -1,13 +1,13 @@
 from fastapi import APIRouter, Depends, Body
 
-from schemas.auth_schemas import RegistrationBodySchema, LoginBodySchema
+from schemas.auth_schemas import RegistrationBodySchema, LoginBodySchema, RegistrationResponse, AuthorizationResponse
 from services.auth_service import AuthService
 
 router = APIRouter(prefix="/v1/auth")
 
 
 @router.post(
-    "/registration", summary="Регистрация"
+    "/registration", summary="Регистрация", response_model=RegistrationResponse
 )
 async def registration(
     service: AuthService = Depends(),
@@ -17,7 +17,7 @@ async def registration(
 
 
 @router.post(
-    "/login", summary="Авторизация"
+    "/login", summary="Авторизация", response_model=AuthorizationResponse
 )
 async def login(
     service: AuthService = Depends(),
