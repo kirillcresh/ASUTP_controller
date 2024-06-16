@@ -49,3 +49,19 @@ class LoginBodySchema(BaseModel):
 class AuthorizationResponse(BaseModel):
     access_token: str
     refresh_token: str
+
+
+class UpdateUserSchema(BaseModel):
+    id: int = Field(description="ID пользователя")
+    name: str | None = Field(
+        description="Имя пользователя", min_length=3, max_length=255, default="User ASUTP"
+    )
+    login: str | None = Field(
+        description="Логин пользователя", min_length=3, max_length=32
+    )
+    password: str | None = Field(description="Пароль пользователя", min_length=8, max_length=64)
+    is_admin: bool | None = Field(description="Администратор", default=False)
+
+    @validator("password")
+    def validate_strong_password(cls, password: str):
+        return validate_password(password=password)

@@ -1,8 +1,10 @@
 from fastapi import APIRouter, Depends, Body
 
-from schemas.auth_schemas import RegistrationBodySchema, LoginBodySchema, RegistrationResponse, AuthorizationResponse
+from schemas.auth_schemas import RegistrationBodySchema, LoginBodySchema, RegistrationResponse, AuthorizationResponse, \
+    UpdateUserSchema
 from schemas.token_schema import TokenData, GetRefreshData
-from security_manager import SecurityManager
+from utils.paginate import PaginationRequestBodySchema
+from utils.security_manager import SecurityManager
 from services.auth_service import AuthService
 
 router = APIRouter(prefix="/v1/auth")
@@ -14,9 +16,9 @@ router = APIRouter(prefix="/v1/auth")
 async def registration(
     access_token_data: TokenData = Depends(SecurityManager.get_access_token_payload),
     service: AuthService = Depends(),
-    dto: RegistrationBodySchema = Body(),
+    data_dct: RegistrationBodySchema = Body(),
 ):
-    return await service.registration(dto=dto, access_token_data=access_token_data)
+    return await service.registration(data_dct=data_dct, access_token_data=access_token_data)
 
 
 @router.post(
@@ -24,9 +26,9 @@ async def registration(
 )
 async def login(
     service: AuthService = Depends(),
-    dto: LoginBodySchema = Body(),
+    data_dct: LoginBodySchema = Body(),
 ):
-    return await service.login(dto=dto)
+    return await service.login(data_dct=data_dct)
 
 
 @router.get(
@@ -37,3 +39,38 @@ async def refresh(
     refresh_data: GetRefreshData = Depends(SecurityManager.get_refresh_token_data),
 ):
     return await service.refresh(refresh_data)
+
+
+@router.get("/get-users", summary="Получение всех пользователей")
+async def get_users(
+    service: AuthService = Depends(),
+    access_token_data: TokenData = Depends(SecurityManager.get_access_token_payload),
+    pagination: PaginationRequestBodySchema = Depends(),
+):
+    return await service.get_users(pagination, access_token_data)
+
+
+@router.get("/get-current-user", summary="Получение данных текущего пользователя", response_model=RegistrationResponse)
+async def get_user_current(
+    service: AuthService = Depends(),
+    access_token_data: TokenData = Depends(SecurityManager.get_access_token_payload),
+):
+    return await service.get_user_current(access_token_data)
+
+
+@router.put("/update-user", summary="Обновление данных пользователя", response_model=RegistrationResponse)
+async def update_user(
+    service: AuthService = Depends(),
+    data_dct: UpdateUserSchema = Body(),
+    access_token_data: TokenData = Depends(SecurityManager.get_access_token_payload),
+):
+    return await service.update_user(data_dct, access_token_data)
+
+
+@router.delete("/delete-user", summary="Удаление пользователя")
+async def delete_user(
+    user_id: int,
+    service: AuthService = Depends(),
+    access_token_data: TokenData = Depends(SecurityManager.get_access_token_payload),
+):
+    return await service.delete_user(access_token_data, user_id)
