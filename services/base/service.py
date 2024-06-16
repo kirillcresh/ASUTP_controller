@@ -29,7 +29,6 @@ class Meta(type):
             if hasattr(config, "include"):
                 functions = [key for key in functions if key in config.include]
             else:
-                # выкидываем магические методы
                 functions = [
                     key
                     for key in functions

@@ -14,7 +14,7 @@ class CurrentState(Base):
     param_id: Mapped[int] = mapped_column(ForeignKey("param.id"), nullable=False)
     element_id: Mapped[int] = mapped_column(ForeignKey("element.id"), nullable=False)
     value: Mapped[float] = mapped_column(
-        Numeric(10, 2), comment="Значение показателя", nullable=False
+        Numeric(10, 3), comment="Значение показателя", nullable=False
     )
     update_time: Mapped[datetime] = mapped_column(
         DateTime,
