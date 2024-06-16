@@ -15,3 +15,10 @@ class MaintenanceBodySchema(BaseModel):
         description="Значение показателя, если валидно"
     )
     date_created: datetime = Field(description="Дата создания записи", default=datetime.utcnow())
+
+
+class MaintenanceResponse(MaintenanceBodySchema):
+    id: int
+
+    class Config:
+        orm_mode = True

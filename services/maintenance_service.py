@@ -10,10 +10,11 @@ from loggers.logger import (get_custom_logger, get_rotating_file_handler,
 from models.action_model import Action
 from models.maintenance_journal_model import MaintenanceJournal
 from models.user_model import User
-from schemas.maintenance_schema import MaintenanceBodySchema
+from schemas.maintenance_schema import MaintenanceBodySchema, MaintenanceResponse
 from schemas.token_schema import TokenData
 from services.base.service import BaseService
 from settings import settings
+from utils.paginate import paginate, PaginationRequestBodySchema
 
 logger = get_custom_logger(
     logger_name=__name__,
@@ -46,3 +47,11 @@ class MaintenanceService(BaseService):
         ).scalar_one_or_none()
         await self.session.commit()
         return maintenance
+
+    async def get_list_maintenance(self, access_token_data: TokenData, pagination: PaginationRequestBodySchema):
+        maintenance = list((
+            await self.session.execute(
+                select(MaintenanceJournal)
+            )
+        ).scalars().all())
+        return paginate(data=maintenance, dto=pagination, data_schema=MaintenanceResponse)
