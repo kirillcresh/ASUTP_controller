@@ -41,7 +41,6 @@ def paginate(
         data = data[start_item:final_item]
 
     if data_schema:
-        # data = [parse_obj_as(data_schema, single_data) for single_data in data]
         data = [data_schema.from_orm(item).dict() for item in data]
 
     response = {
