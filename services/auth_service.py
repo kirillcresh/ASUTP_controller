@@ -1,5 +1,5 @@
 from fastapi import HTTPException, Depends
-from sqlalchemy import select, or_, insert
+from sqlalchemy import select, or_, insert, func
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
@@ -11,7 +11,9 @@ from loggers.logger import (
     logger_decorator,
 )
 from models.user_model import User
-from schemas.auth_schemas import RegistrationBodySchema
+from schemas.auth_schemas import RegistrationBodySchema, LoginBodySchema, AuthorizationResponse
+from schemas.token_schema import UserPayload
+from security_manager import SecurityManager
 
 from services.base.service import BaseService
 from settings import settings
@@ -29,15 +31,29 @@ class AuthService(BaseService):
     def __init__(self, session: AsyncSession = Depends(get_session)):
         self.session = session
 
+    async def _upsert_user_tokens(self, user: User):
+        payload = UserPayload(
+            id=user.id,
+            name=user.name,
+            login=user.login
+        )
+        access_token, refresh_token = SecurityManager.generate_tokens(
+            token_data=payload
+        )
+        return AuthorizationResponse(
+            access_token=access_token, refresh_token=refresh_token
+        )
+
     async def registration(self, dto: RegistrationBodySchema):
         user = (
-            await self.session.execute(select(User).where(User.login == dto.login))
+            await self.session.execute(select(User).where(func.lower(User.login) == dto.login.lower()))
         ).scalar_one_or_none()
         if user:
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
                 detail="user with this login already exists",
             )
+        dto.password = SecurityManager.hash_string(dto.password)
         user = (
             await self.session.execute(
                 insert(User)
@@ -49,3 +65,15 @@ class AuthService(BaseService):
         ).scalar_one_or_none()
         await self.session.commit()
         return user
+
+    async def login(self, dto: LoginBodySchema):
+        user = (
+            await self.session.execute(
+                select(User).where(func.lower(User.login) == dto.login.lower())
+            )
+        ).scalar_one_or_none()
+        if not user:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="user not found")
+        if not SecurityManager.check_hash(dto.password, user.password):
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="wrong password")
+        return await self._upsert_user_tokens(user=user)

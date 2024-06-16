@@ -10,7 +10,7 @@ from starlette import status
 
 from settings import settings
 
-from schemas.token_schema import CodeTokenSchema, GetRefreshData, RefreshToken, TokenData, UserPayload
+from schemas.token_schema import GetRefreshData, RefreshToken, TokenData, UserPayload
 
 
 class SecurityManager:
@@ -89,14 +89,6 @@ class SecurityManager:
             return access_data, refresh_data
         except Exception:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="unauthorized")
-
-    @classmethod
-    def check_admin_api_key(
-            cls, key: str = Depends(APIKeyHeader(name="AdminApiKey", scheme_name="AdminApiKey")),
-    ):
-        if not key or key != settings.ADMIN_API_KEY:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="unauthorized")
-        return key
 
     @classmethod
     def get_access_token_payload(

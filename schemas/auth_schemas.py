@@ -26,5 +26,15 @@ class RegistrationBodySchema(BaseModel):
     @validator("password")
     def validate_strong_password(cls, password: str):
         return validate_password(password=password)
-    class Config:
-        orm_mode = True
+
+
+class LoginBodySchema(BaseModel):
+    login: str = Field(
+        description="Логин пользователя", min_length=3, max_length=32
+    )
+    password: str = Field(description="Пароль пользователя", min_length=8, max_length=64)
+
+
+class AuthorizationResponse(BaseModel):
+    access_token: str
+    refresh_token: str
