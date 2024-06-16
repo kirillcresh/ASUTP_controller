@@ -22,6 +22,7 @@ class RegistrationBodySchema(BaseModel):
         description="Логин пользователя", min_length=3, max_length=32
     )
     password: str = Field(description="Пароль пользователя", min_length=8, max_length=64)
+    is_admin: bool = Field(description="Администратор", default=False)
 
     @validator("password")
     def validate_strong_password(cls, password: str):
@@ -32,6 +33,7 @@ class RegistrationResponse(BaseModel):
     id: int
     name: str
     login: str
+    is_admin: bool
 
     class Config:
         orm_mode = True

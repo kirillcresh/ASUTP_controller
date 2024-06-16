@@ -7,6 +7,7 @@ class UserPayload(BaseModel):
     id: int
     name: str
     login: str
+    is_admin: bool
 
 
 class RefreshToken(BaseModel):
