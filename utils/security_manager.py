@@ -44,8 +44,9 @@ class SecurityManager:
         access_token = jwt.encode(
             {
                 **token_data.dict(),
-                "exp": datetime.datetime.utcnow() + datetime.timedelta(seconds=settings.ACCESS_TOKEN_EXPIRE),
-                "iat": iat
+                "exp": datetime.datetime.utcnow()
+                + datetime.timedelta(seconds=settings.ACCESS_TOKEN_EXPIRE),
+                "iat": iat,
             },
             key=settings.SECRET_KEY,
             algorithm=settings.ALGORITHM,
@@ -53,8 +54,9 @@ class SecurityManager:
         refresh_token = jwt.encode(
             {
                 "id": token_data.id,
-                "exp": datetime.datetime.utcnow() + datetime.timedelta(days=settings.REFRESH_TOKEN_EXPIRE),
-                "iat": iat
+                "exp": datetime.datetime.utcnow()
+                + datetime.timedelta(days=settings.REFRESH_TOKEN_EXPIRE),
+                "iat": iat,
             },
             key=settings.SECRET_KEY,
             algorithm=settings.ALGORITHM,
@@ -67,34 +69,39 @@ class SecurityManager:
             token,
             settings.SECRET_KEY,
             settings.ALGORITHM,
-            options={'verify_exp': raise_expired_access},
+            options={"verify_exp": raise_expired_access},
         )
 
     @classmethod
     def _get_tokens_data(
-            cls,
-            access: str,
-            refresh: str,
-            raise_expired_access: bool = True
+        cls, access: str, refresh: str, raise_expired_access: bool = True
     ) -> tuple[TokenData, RefreshToken]:
         if not refresh and not access:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="unauthorized")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED, detail="unauthorized"
+            )
         try:
             refresh_payload = cls._decode_token(refresh)
-            access_payload = cls._decode_token(access, raise_expired_access=raise_expired_access)
+            access_payload = cls._decode_token(
+                access, raise_expired_access=raise_expired_access
+            )
             access_data = TokenData(**access_payload)
             refresh_data = RefreshToken(**refresh_payload)
             if access_data.iat != refresh_data.iat or access_data.id != refresh_data.id:
-                raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="unauthorized")
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED, detail="unauthorized"
+                )
             return access_data, refresh_data
         except Exception:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="unauthorized")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED, detail="unauthorized"
+            )
 
     @classmethod
     def get_access_token_payload(
-            cls,
-            access: str = Depends(APIKeyHeader(name="Access", scheme_name="Access")),
-            refresh: str = Depends(APIKeyHeader(name="Refresh", scheme_name="Refresh")),
+        cls,
+        access: str = Depends(APIKeyHeader(name="Access", scheme_name="Access")),
+        refresh: str = Depends(APIKeyHeader(name="Refresh", scheme_name="Refresh")),
     ) -> TokenData:
         """Функция для валидации токена и получения полезной нагрузки (payload).
 
@@ -106,10 +113,12 @@ class SecurityManager:
 
     @classmethod
     def get_refresh_token_data(
-            cls,
-            access: str = Depends(APIKeyHeader(name="Access", scheme_name="Access")),
-            refresh: str = Depends(APIKeyHeader(name="Refresh", scheme_name="Refresh")),
+        cls,
+        access: str = Depends(APIKeyHeader(name="Access", scheme_name="Access")),
+        refresh: str = Depends(APIKeyHeader(name="Refresh", scheme_name="Refresh")),
     ) -> GetRefreshData:
         """Используется в refresh-эндпоинте"""
-        _, refresh_data = cls._get_tokens_data(access, refresh, raise_expired_access=False)
+        _, refresh_data = cls._get_tokens_data(
+            access, refresh, raise_expired_access=False
+        )
         return GetRefreshData(id=refresh_data.id, refresh_token=refresh)

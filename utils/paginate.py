@@ -8,11 +8,15 @@ from starlette import status
 
 class PaginationRequestBodySchema(BaseModel):
     page: int = Field(ge=1, description="Текущая страница")
-    page_size: int = Field(ge=1, le=50, description="Количество элементов для отображения на странице")
+    page_size: int = Field(
+        ge=1, le=50, description="Количество элементов для отображения на странице"
+    )
 
 
 class PaginationAbstractResponseSchema(BaseModel):
-    total_pages: int = Field(description="Максимальное количество страниц с текущими параметрами page_size")
+    total_pages: int = Field(
+        description="Максимальное количество страниц с текущими параметрами page_size"
+    )
     current_page: int = Field(description="Текущая страница")
 
 

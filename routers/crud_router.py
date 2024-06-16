@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends
 
 from schemas.token_schema import TokenData
-from utils.security_manager import SecurityManager
 from services.crud_service import CrudService
+from utils.security_manager import SecurityManager
 
 router = APIRouter(prefix="/v1/crud")
 

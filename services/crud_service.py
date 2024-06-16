@@ -3,7 +3,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from database import get_session
 from loggers.handler import exception_handler
-from loggers.logger import get_custom_logger, get_rotating_file_handler, logger_decorator
+from loggers.logger import (get_custom_logger, get_rotating_file_handler,
+                            logger_decorator)
 from services.base.service import BaseService
 from settings import settings
 
