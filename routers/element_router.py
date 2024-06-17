@@ -23,7 +23,9 @@ async def get_element_list_router(
 
 
 @router.get(
-    "/{element_id}", summary="Получить Element по ID", response_model=ElementListResponse
+    "/{element_id}",
+    summary="Получить Element по ID",
+    response_model=ElementListResponse,
 )
 async def get_element_by_id_router(
     element_id: int,

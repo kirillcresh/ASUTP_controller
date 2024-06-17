@@ -23,7 +23,9 @@ async def get_state_list_router(
 
 
 @router.get(
-    "/{state_id}", summary="Получить Current State по ID", response_model=CurrentStateListResponse
+    "/{state_id}",
+    summary="Получить Current State по ID",
+    response_model=CurrentStateListResponse,
 )
 async def get_state_by_id_router(
     state_id: int,

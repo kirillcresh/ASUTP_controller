@@ -35,7 +35,5 @@ async def get_element_by_id_router(
         action_id=error_id
     )
     if not error:
-        raise HTTPException(
-            status_code=404, detail=f"Element с ID {error_id} не найден"
-        )
+        raise HTTPException(status_code=404, detail=f"Error с ID {error_id} не найден")
     return error
