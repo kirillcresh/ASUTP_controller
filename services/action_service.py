@@ -8,7 +8,7 @@ from utils.paginate import PaginationRequestBodySchema, paginate
 
 class ActionService(CommonResource):
     async def get_action_list(self, pagination: PaginationRequestBodySchema):
-        actions = await super().get_list(model=Action, pagination=pagination)
+        actions = await super().get_list(model=Action)
         return paginate(data=actions, dto=pagination, data_schema=ActionListResponse)
 
     async def get_action_by_id(self, action_id: int):
