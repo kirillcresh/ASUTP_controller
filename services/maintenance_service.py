@@ -3,7 +3,6 @@ from sqlalchemy import insert, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
-from database import get_session
 from loggers.handler import exception_handler
 from loggers.logger import (
     get_custom_logger,
@@ -16,7 +15,6 @@ from models.user_model import User
 from schemas.maintenance_schema import MaintenanceBodySchema, MaintenanceResponse
 from schemas.token_schema import TokenData
 from services import CommonResource
-from services.base.service import BaseService
 from settings import settings
 from utils.paginate import PaginationRequestBodySchema, paginate
 
@@ -69,7 +67,7 @@ class MaintenanceService(CommonResource):
     async def get_list_maintenance(
         self, access_token_data: TokenData, pagination: PaginationRequestBodySchema
     ):
-        maintenances = await super().get_list(model=User)
+        maintenances = await super().get_list(model=MaintenanceJournal)
         return paginate(data=maintenances, dto=pagination, data_schema=MaintenanceResponse)
 
     async def get_maintenance_by_id(self, access_token_data: TokenData, maintenance_id: int):

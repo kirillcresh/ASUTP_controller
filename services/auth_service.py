@@ -20,7 +20,7 @@ from schemas.auth_schema import (
     UpdateUserSchema,
 )
 from schemas.token_schema import GetRefreshData, TokenData, UserPayload
-from services.base.service import BaseService
+from services import CommonResource
 from settings import settings
 from utils.paginate import PaginationRequestBodySchema, paginate
 from utils.security_manager import SecurityManager
@@ -31,12 +31,9 @@ logger = get_custom_logger(
 )
 
 
-class AuthService(BaseService):
+class AuthService(CommonResource):
     class Config:
         decorators = [logger_decorator(logger), exception_handler(logger)]
-
-    def __init__(self, session: AsyncSession = Depends(get_session)):
-        self.session = session
 
     async def _upsert_user_tokens(self, user: User):
         payload = UserPayload(
@@ -156,6 +153,10 @@ class AuthService(BaseService):
         user = (
             await self.session.execute(select(User).where(User.id == data_dct.id))
         ).scalar_one_or_none()
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail=f"User с ID {data_dct.id} не найден"
+            )
         user.name = data_dct.name if data_dct.name else user.name
         user.login = data_dct.login if data_dct.login else user.login
         user.password = data_dct.password if data_dct.password else user.password
@@ -172,3 +173,10 @@ class AuthService(BaseService):
         await self.session.execute(delete(User).where(User.id == user_id))
         await self.session.commit()
         return Response(status_code=status.HTTP_201_CREATED)
+
+    async def get_user_by_id(self, access_token_data: TokenData, user_id: int):
+        return await super().get_by_id(model=User, object_id=user_id)
+
+    async def partial_update_user(self, access_token_data: TokenData, user_id: int, fields: dict):
+        await super().partial_update(model=User, object_id=user_id, fields=fields)
+

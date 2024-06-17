@@ -1,6 +1,15 @@
 from datetime import datetime
+from typing import Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, validator
+
+
+def validate_value(value: float):
+    decimal_places = 3
+    if round(value, decimal_places) != value:
+        raise ValueError(f'Значение должно содержать 3 цифры после запятой')
+
+    return value
 
 
 class MaintenanceBodySchema(BaseModel):
@@ -15,6 +24,21 @@ class MaintenanceBodySchema(BaseModel):
     date_created: datetime = Field(
         description="Дата создания записи", default=datetime.utcnow()
     )
+
+    @validator("value")
+    def validate_value(cls, value: float):
+        return validate_value(value)
+
+class PartialMaintenanceBodySchema(BaseModel):
+    action_id: Optional[int] = None
+    created_by: Optional[int] = None
+    description: Optional[str] = None
+    value: Optional[float] = None
+    date_created: Optional[datetime] = None
+
+    @validator("value")
+    def validate_value(cls, value: float):
+        return validate_value(value)
 
 
 class MaintenanceResponse(MaintenanceBodySchema):

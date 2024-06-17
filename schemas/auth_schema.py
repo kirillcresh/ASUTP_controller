@@ -60,6 +60,26 @@ class AuthorizationResponse(BaseModel):
 
 class UpdateUserSchema(BaseModel):
     id: int = Field(description="ID пользователя")
+    name: str = Field(
+        description="Имя пользователя",
+        min_length=3,
+        max_length=255,
+        default="User ASUTP",
+    )
+    login: str = Field(
+        description="Логин пользователя", min_length=3, max_length=32
+    )
+    password: str = Field(
+        description="Пароль пользователя", min_length=8, max_length=64
+    )
+    is_admin: bool = Field(description="Администратор", default=False)
+
+    @validator("password")
+    def validate_strong_password(cls, password: str):
+        return validate_password(password=password)
+
+
+class PartialUpdateUserSchema(BaseModel):
     name: str | None = Field(
         description="Имя пользователя",
         min_length=3,

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Body, Depends, HTTPException
 
-from schemas.maintenance_schema import MaintenanceBodySchema
+from schemas.maintenance_schema import MaintenanceBodySchema, PartialMaintenanceBodySchema
 from schemas.token_schema import TokenData
 from services.maintenance_service import MaintenanceService
 from utils.paginate import PaginationRequestBodySchema
@@ -91,26 +91,26 @@ async def update_maintenance(
 
 
 @router.patch("/maintenance/{maintenance_id}", summary="Обновление записи в журнале обслуживания")
-async def update_maintenance(
+async def partial_update_maintenance(
     maintenance_id: int,
     access_token_data: TokenData = Depends(SecurityManager.get_access_token_payload),
     service: MaintenanceService = Depends(),
-    data_dct: MaintenanceBodySchema = Body(),
+    data_dct: PartialMaintenanceBodySchema = Body(),
 ):
-    maintence = await service.get_maintenance_by_id(
+    maintenance = await service.get_maintenance_by_id(
         access_token_data=access_token_data,
         maintenance_id=maintenance_id
     )
-    if not maintence:
+    if not maintenance:
         raise HTTPException(
             status_code=404, detail=f"Maintenance с ID {maintenance_id} не найден"
         )
-    await service.update_maintenance(
+    await service.partial_update_maintenance(
         access_token_data=access_token_data,
         maintenance_id=maintenance_id,
-        data_dct=data_dct
+        fields=data_dct.dict()
     )
-    maintence = await service.get_maintenance_by_id(
+    maintenance = await service.get_maintenance_by_id(
         access_token_data=access_token_data,
         maintenance_id=maintenance_id)
-    return maintence
+    return maintenance

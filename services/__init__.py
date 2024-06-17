@@ -46,7 +46,7 @@ class CommonResource:
         instance = result.scalar_one_or_none()
 
         for key, value in fields.items():
-            if hasattr(instance, key):
+            if value is not None and hasattr(instance, key):
                 setattr(instance, key, value)
 
         await self.session.commit()

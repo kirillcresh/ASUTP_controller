@@ -1,11 +1,11 @@
-from fastapi import APIRouter, Body, Depends
+from fastapi import APIRouter, Body, Depends, HTTPException
 
 from schemas.auth_schema import (
     AuthorizationResponse,
     LoginBodySchema,
     RegistrationBodySchema,
     RegistrationResponse,
-    UpdateUserSchema,
+    UpdateUserSchema, PartialUpdateUserSchema,
 )
 from schemas.token_schema import GetRefreshData, TokenData
 from services.auth_service import AuthService
@@ -87,3 +87,29 @@ async def delete_user(
     access_token_data: TokenData = Depends(SecurityManager.get_access_token_payload),
 ):
     return await service.delete_user(access_token_data, user_id)
+
+
+@router.patch("/{user_id}", summary="Обновление записи пользователя")
+async def partial_update_user(
+    user_id: int,
+    access_token_data: TokenData = Depends(SecurityManager.get_access_token_payload),
+    service: AuthService = Depends(),
+    data_dct: PartialUpdateUserSchema = Body(),
+):
+    user = await service.get_user_by_id(
+        access_token_data=access_token_data,
+        user_id=user_id
+    )
+    if not user:
+        raise HTTPException(
+            status_code=404, detail=f"User с ID {user_id} не найден"
+        )
+    await service.partial_update_user(
+        access_token_data=access_token_data,
+        user_id=user_id,
+        fields=data_dct.dict()
+    )
+    user = await service.get_user_by_id(
+        access_token_data=access_token_data,
+        user_id=user_id)
+    return user
