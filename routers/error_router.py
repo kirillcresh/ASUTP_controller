@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 
 from schemas.error_schema import ErrorListResponse
-from schemas.token_schema import GetRefreshData
+from schemas.token_schema import TokenData
 from services.error_service import ErrorService
 from utils.paginate import PaginationRequestBodySchema
 from utils.security_manager import SecurityManager
@@ -12,11 +12,11 @@ router = APIRouter(prefix="/v1/error")
 @router.get("/list", summary="Список Error")
 async def get_error_list_router(
     service: ErrorService = Depends(),
-    # refresh_data: GetRefreshData = Depends(SecurityManager.get_refresh_token_data),
+    access_token_data: TokenData = Depends(SecurityManager.get_access_token_payload),
     pagination: PaginationRequestBodySchema = Depends(),
 ):
     errors = await service.get_error_list(
-        # refresh_data=refresh_data,
+        access_token_data=access_token_data,
         pagination=pagination
     )
     return errors
@@ -27,11 +27,11 @@ async def get_error_list_router(
 )
 async def get_error_by_id_router(
     error_id: int,
-    service: ErrorService = Depends()
-    # refresh_data: GetRefreshData = Depends(SecurityManager.get_refresh_token_data),
+    service: ErrorService = Depends(),
+    access_token_data: TokenData = Depends(SecurityManager.get_access_token_payload),
 ):
     error = await service.get_error_by_id(
-        # refresh_data=refresh_data,
+        access_token_data=access_token_data,
         error_id=error_id
     )
     if not error:

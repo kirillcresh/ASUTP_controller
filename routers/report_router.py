@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 
 from schemas.report_schema import ReportListResponse
-from schemas.token_schema import GetRefreshData
+from schemas.token_schema import TokenData
 from services.report_service import ReportService
 from utils.paginate import PaginationRequestBodySchema
 from utils.security_manager import SecurityManager
@@ -12,11 +12,11 @@ router = APIRouter(prefix="/v1/report")
 @router.get("/list", summary="Список Report")
 async def get_report_list_router(
     service: ReportService = Depends(),
-    # refresh_data: GetRefreshData = Depends(SecurityManager.get_refresh_token_data),
+    access_token_data: TokenData = Depends(SecurityManager.get_access_token_payload),
     pagination: PaginationRequestBodySchema = Depends(),
 ):
     reports = await service.get_report_list(
-        # refresh_data=refresh_data,
+        access_token_data=access_token_data,
         pagination=pagination
     )
     return reports
@@ -29,11 +29,11 @@ async def get_report_list_router(
 )
 async def get_report_by_id_router(
     report_id: int,
-    service: ReportService = Depends()
-    # refresh_data: GetRefreshData = Depends(SecurityManager.get_refresh_token_data),
+    service: ReportService = Depends(),
+    access_token_data: TokenData = Depends(SecurityManager.get_access_token_payload),
 ):
     report = await service.get_report_by_id(
-        # refresh_data=refresh_data,
+        access_token_data=access_token_data,
         report_id=report_id
     )
     if not report:

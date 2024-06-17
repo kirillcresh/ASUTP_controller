@@ -1,3 +1,5 @@
+from typing import Dict, Any
+
 from fastapi import Depends
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -34,6 +36,19 @@ class CommonResource:
         instance = result.scalar_one_or_none()
         for key, value in kwargs.items():
             setattr(instance, key, value)
+        await self.session.commit()
+        await self.session.refresh(instance)
+        return instance
+
+    async def partial_update(self, model, object_id: int, fields: Dict[str, Any]):
+        query = select(model).where(model.id == object_id)
+        result = await self.session.execute(query)
+        instance = result.scalar_one_or_none()
+
+        for key, value in fields.items():
+            if hasattr(instance, key):
+                setattr(instance, key, value)
+
         await self.session.commit()
         await self.session.refresh(instance)
         return instance

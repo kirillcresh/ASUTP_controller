@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 
 from schemas.param_schema import ParamListResponse
-from schemas.token_schema import GetRefreshData
+from schemas.token_schema import TokenData
 from services.param_service import ParamService
 from utils.paginate import PaginationRequestBodySchema
 from utils.security_manager import SecurityManager
@@ -12,11 +12,11 @@ router = APIRouter(prefix="/v1/param")
 @router.get("/list", summary="Список Param")
 async def get_param_list_router(
     service: ParamService = Depends(),
-    # refresh_data: GetRefreshData = Depends(SecurityManager.get_refresh_token_data),
+    access_token_data: TokenData = Depends(SecurityManager.get_access_token_payload),
     pagination: PaginationRequestBodySchema = Depends(),
 ):
     params = await service.get_param_list(
-        # refresh_data=refresh_data,
+        access_token_data=access_token_data,
         pagination=pagination
     )
     return params
@@ -29,11 +29,11 @@ async def get_param_list_router(
 )
 async def get_param_by_id_router(
     param_id: int,
-    service: ParamService = Depends()
-    # refresh_data: GetRefreshData = Depends(SecurityManager.get_refresh_token_data),
+    service: ParamService = Depends(),
+    access_token_data: TokenData = Depends(SecurityManager.get_access_token_payload),
 ):
     param = await service.get_param_by_id(
-        # refresh_data=refresh_data,
+        access_token_data=access_token_data,
         param_id=param_id
     )
     if not param:

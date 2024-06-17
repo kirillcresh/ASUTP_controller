@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 
 from schemas.state_register_schema import StateRegisterListResponse
-from schemas.token_schema import GetRefreshData
+from schemas.token_schema import TokenData
 from services.state_register_service import StateRegisterService
 from utils.paginate import PaginationRequestBodySchema
 from utils.security_manager import SecurityManager
@@ -12,11 +12,11 @@ router = APIRouter(prefix="/v1/stare_register")
 @router.get("/list", summary="Список State Register")
 async def get_state_register_list_router(
     service: StateRegisterService = Depends(),
-    # refresh_data: GetRefreshData = Depends(SecurityManager.get_refresh_token_data),
+    access_token_data: TokenData = Depends(SecurityManager.get_access_token_payload),
     pagination: PaginationRequestBodySchema = Depends(),
 ):
     states = await service.get_state_register_list(
-        # refresh_data=refresh_data,
+        access_token_data=access_token_data,
         pagination=pagination
     )
     return states
@@ -29,11 +29,11 @@ async def get_state_register_list_router(
 )
 async def get_state_register_by_id_router(
     state_id: int,
-    service: StateRegisterService = Depends()
-    # refresh_data: GetRefreshData = Depends(SecurityManager.get_refresh_token_data),
+    service: StateRegisterService = Depends(),
+    access_token_data: TokenData = Depends(SecurityManager.get_access_token_payload),
 ):
     state = await service.get_state_register_by_id(
-        # refresh_data=refresh_data,
+        access_token_data=access_token_data,
         state_register_id=state_id
     )
     if not state:

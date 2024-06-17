@@ -15,6 +15,7 @@ from models.maintenance_journal_model import MaintenanceJournal
 from models.user_model import User
 from schemas.maintenance_schema import MaintenanceBodySchema, MaintenanceResponse
 from schemas.token_schema import TokenData
+from services import CommonResource
 from services.base.service import BaseService
 from settings import settings
 from utils.paginate import PaginationRequestBodySchema, paginate
@@ -27,12 +28,9 @@ logger = get_custom_logger(
 )
 
 
-class MaintenanceService(BaseService):
+class MaintenanceService(CommonResource):
     class Config:
         decorators = [logger_decorator(logger), exception_handler(logger)]
-
-    def __init__(self, session: AsyncSession = Depends(get_session)):
-        self.session = session
 
     async def create_maintenance(
         self, data_dct: MaintenanceBodySchema, access_token_data: TokenData
@@ -71,9 +69,17 @@ class MaintenanceService(BaseService):
     async def get_list_maintenance(
         self, access_token_data: TokenData, pagination: PaginationRequestBodySchema
     ):
-        maintenance = list(
-            (await self.session.execute(select(MaintenanceJournal))).scalars().all()
-        )
-        return paginate(
-            data=maintenance, dto=pagination, data_schema=MaintenanceResponse
-        )
+        maintenances = await super().get_list(model=User)
+        return paginate(data=maintenances, dto=pagination, data_schema=MaintenanceResponse)
+
+    async def get_maintenance_by_id(self, access_token_data: TokenData, maintenance_id: int):
+        return await super().get_by_id(model=MaintenanceJournal, object_id=maintenance_id)
+
+    async def delete_maintenance(self, access_token_data: TokenData, maintenance_id: int):
+        await super().delete(model=MaintenanceJournal, object_id=maintenance_id)
+
+    async def update_maintenance(self, access_token_data: TokenData, maintenance_id: int, data_dct: MaintenanceBodySchema):
+        await super().update(model=MaintenanceJournal, object_id=maintenance_id, **data_dct.dict())
+
+    async def partial_update_maintenance(self, access_token_data: TokenData, maintenance_id: int, fields: dict):
+        await super().partial_update(model=MaintenanceJournal, object_id=maintenance_id, fields=fields)
