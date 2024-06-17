@@ -6,7 +6,7 @@ from services.element_service import ElementService
 from utils.paginate import PaginationRequestBodySchema
 from utils.security_manager import SecurityManager
 
-router = APIRouter(prefix="/v1/action")
+router = APIRouter(prefix="/v1/element")
 
 
 @router.get("/list", summary="Список Element")
