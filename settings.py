@@ -1,10 +1,11 @@
 from pathlib import Path
 
-from pydantic import BaseSettings, Field
+from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
     """Settings for env file"""
+
     SERVER_HOST: str = "localhost"
     SERVER_PORT: int = 8000
     CORS_ALLOWED_ORIGINS: str
@@ -23,7 +24,4 @@ class Settings(BaseSettings):
     POSTGRES_PORT: int
 
 
-settings = Settings(
-    _env_file=".env",
-    _env_file_encoding="utf-8"
-)
+settings = Settings(_env_file=".env", _env_file_encoding="utf-8")
