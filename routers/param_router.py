@@ -38,6 +38,6 @@ async def get_param_by_id_router(
     )
     if not param:
         raise HTTPException(
-            status_code=404, detail=f"Element с ID {param_id} не найден"
+            status_code=404, detail=f"Param с ID {param_id} не найден"
         )
     return param
