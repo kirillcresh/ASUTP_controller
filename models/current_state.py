@@ -1,7 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import Integer, String, Boolean, Text, ForeignKey, Numeric, DateTime
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, Numeric
 
 from database import Base
 
@@ -10,15 +9,13 @@ class CurrentState(Base):
     __tablename__ = "current_state"
     __table_args__ = {"comment": "This table stores current state data"}
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    param_id: Mapped[int] = mapped_column(ForeignKey("param.id"), nullable=False)
-    element_id: Mapped[int] = mapped_column(ForeignKey("element.id"), nullable=False)
-    value: Mapped[float] = mapped_column(
-        Numeric(10, 3), comment="Значение показателя", nullable=False
-    )
-    update_time: Mapped[datetime] = mapped_column(
+    id = Column(Integer, primary_key=True)
+    param_id = Column(Integer, ForeignKey("param.id"), nullable=False)
+    element_id = Column(Integer, ForeignKey("element.id"), nullable=False)
+    value = Column(Numeric(10, 3), comment="Значение показателя", nullable=False)
+    update_time = Column(
         DateTime,
         comment="Дата обновления записи",
-        default=datetime.utcnow(),
+        default=datetime.utcnow,
         nullable=False,
     )

@@ -1,7 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import Integer, String, Boolean, Text, ForeignKey, Numeric, DateTime
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, Numeric, Text
 
 from database import Base
 
@@ -10,22 +9,20 @@ class MaintenanceJournal(Base):
     __tablename__ = "maintenance_journal"
     __table_args__ = {"comment": "This table stores maintenance journal data"}
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    action_id: Mapped[int] = mapped_column(
-        ForeignKey("action.id", ondelete="CASCADE"), nullable=False
+    id = Column(Integer, primary_key=True)
+    action_id = Column(
+        Integer, ForeignKey("action.id", ondelete="CASCADE"), nullable=False
     )
-    created_by: Mapped[int] = mapped_column(
-        ForeignKey("user.id", ondelete="CASCADE"), nullable=False
+    created_by = Column(
+        Integer, ForeignKey("user.id", ondelete="CASCADE"), nullable=False
     )
-    description: Mapped[str] = mapped_column(
-        Text, comment="Описание действия", nullable=False
-    )
-    value: Mapped[float] = mapped_column(
+    description = Column(Text, comment="Описание действия", nullable=False)
+    value = Column(
         Numeric(10, 3), comment="Значение показателя, если валидно", nullable=True
     )
-    date_created: Mapped[datetime] = mapped_column(
+    date_created = Column(
         DateTime,
         comment="Дата создания записи",
-        default=datetime.utcnow(),
+        default=datetime.utcnow,
         nullable=False,
     )
