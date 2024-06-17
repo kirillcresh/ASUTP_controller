@@ -10,22 +10,22 @@ router = APIRouter(prefix="/v1/current_state")
 
 
 @router.get("/list", summary="Список Current State")
-async def get_state_router(
+async def get_state_list_router(
     service: CurrentStateService = Depends(),
     # refresh_data: GetRefreshData = Depends(SecurityManager.get_refresh_token_data),
     pagination: PaginationRequestBodySchema = Depends(),
 ):
-    actions = await service.get_state_list(
+    states = await service.get_state_list(
         # refresh_data=refresh_data,
         pagination=pagination
     )
-    return actions
+    return states
 
 
 @router.get(
     "/{state_id}", summary="Получить Current State по ID", response_model=CurrentStateListResponse
 )
-async def get_state_by_id(
+async def get_state_by_id_router(
     state_id: int,
     service: CurrentStateService = Depends()
     # refresh_data: GetRefreshData = Depends(SecurityManager.get_refresh_token_data),
