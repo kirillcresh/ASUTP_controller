@@ -20,3 +20,28 @@ class CommonResource:
         query = select(model).where(model.id == object_id)
         result = await self.session.execute(query)
         return result.scalar_one_or_none()
+
+    async def create(self, model, **kwargs):
+        instance = model(**kwargs)
+        self.session.add(instance)
+        await self.session.commit()
+        await self.session.refresh(instance)
+        return instance
+
+    async def update(self, model, object_id: int, **kwargs):
+        query = select(model).where(model.id == object_id)
+        result = await self.session.execute(query)
+        instance = result.scalar_one_or_none()
+        for key, value in kwargs.items():
+            setattr(instance, key, value)
+        await self.session.commit()
+        await self.session.refresh(instance)
+        return instance
+
+    async def delete(self, model, object_id: int):
+        query = select(model).where(model.id == object_id)
+        result = await self.session.execute(query)
+        instance = result.scalar_one_or_none()
+        await self.session.delete(instance)
+        await self.session.commit()
+        return instance
