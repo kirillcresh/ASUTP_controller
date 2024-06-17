@@ -2,7 +2,7 @@ from math import ceil
 from typing import Type
 
 from fastapi import HTTPException
-from pydantic import BaseModel, Field, parse_obj_as
+from pydantic import BaseModel, Field
 from starlette import status
 
 

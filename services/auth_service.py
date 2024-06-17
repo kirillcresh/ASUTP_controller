@@ -1,17 +1,24 @@
 from fastapi import Depends, HTTPException
-from sqlalchemy import delete, func, insert, or_, select, update
+from sqlalchemy import delete, func, insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 from starlette.responses import Response
 
 from database import get_session
 from loggers.handler import exception_handler
-from loggers.logger import (get_custom_logger, get_rotating_file_handler,
-                            logger_decorator)
+from loggers.logger import (
+    get_custom_logger,
+    get_rotating_file_handler,
+    logger_decorator,
+)
 from models.user_model import User
-from schemas.auth_schema import (AuthorizationResponse, LoginBodySchema,
-                                 RegistrationBodySchema, RegistrationResponse,
-                                 UpdateUserSchema)
+from schemas.auth_schema import (
+    AuthorizationResponse,
+    LoginBodySchema,
+    RegistrationBodySchema,
+    RegistrationResponse,
+    UpdateUserSchema,
+)
 from schemas.token_schema import GetRefreshData, TokenData, UserPayload
 from services.base.service import BaseService
 from settings import settings

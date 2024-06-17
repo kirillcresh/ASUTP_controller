@@ -1,20 +1,17 @@
 import datetime
 import hashlib
 import hmac
-import secrets
 
 import jwt
 from fastapi import Depends, HTTPException
 from fastapi.security import APIKeyHeader
 from starlette import status
 
-from settings import settings
-
 from schemas.token_schema import GetRefreshData, RefreshToken, TokenData, UserPayload
+from settings import settings
 
 
 class SecurityManager:
-
     @staticmethod
     def hash_string(string: str) -> str:
         """Функция для хеширования кода/токена"""

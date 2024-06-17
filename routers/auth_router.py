@@ -1,8 +1,12 @@
 from fastapi import APIRouter, Body, Depends
 
-from schemas.auth_schema import (AuthorizationResponse, LoginBodySchema,
-                                 RegistrationBodySchema, RegistrationResponse,
-                                 UpdateUserSchema)
+from schemas.auth_schema import (
+    AuthorizationResponse,
+    LoginBodySchema,
+    RegistrationBodySchema,
+    RegistrationResponse,
+    UpdateUserSchema,
+)
 from schemas.token_schema import GetRefreshData, TokenData
 from services.auth_service import AuthService
 from utils.paginate import PaginationRequestBodySchema

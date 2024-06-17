@@ -1,7 +1,6 @@
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
+from sqlalchemy import engine_from_config, pool
 
 from alembic import context
 from models.base import Base
@@ -12,11 +11,11 @@ from settings import settings
 config = context.config
 
 section = config.config_ini_section
-config.set_section_option(section, 'DB_HOST', settings.POSTGRES_HOST)
-config.set_section_option(section, 'DB_PORT', str(settings.POSTGRES_PORT))
-config.set_section_option(section, 'DB_USER', settings.POSTGRES_USER)
-config.set_section_option(section, 'DB_NAME', settings.POSTGRES_DB)
-config.set_section_option(section, 'DB_PASSWORD', settings.POSTGRES_PASSWORD)
+config.set_section_option(section, "DB_HOST", settings.POSTGRES_HOST)
+config.set_section_option(section, "DB_PORT", str(settings.POSTGRES_PORT))
+config.set_section_option(section, "DB_USER", settings.POSTGRES_USER)
+config.set_section_option(section, "DB_NAME", settings.POSTGRES_DB)
+config.set_section_option(section, "DB_PASSWORD", settings.POSTGRES_PASSWORD)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
@@ -73,9 +72,7 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()

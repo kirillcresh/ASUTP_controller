@@ -11,10 +11,10 @@ class MaintenanceBodySchema(BaseModel):
         description="ID пользователя (обязательное поле)",
     )
     description: str = Field(description="Описание действия")
-    value: float | None = Field(
-        description="Значение показателя, если валидно"
+    value: float | None = Field(description="Значение показателя, если валидно")
+    date_created: datetime = Field(
+        description="Дата создания записи", default=datetime.utcnow()
     )
-    date_created: datetime = Field(description="Дата создания записи", default=datetime.utcnow())
 
 
 class MaintenanceResponse(MaintenanceBodySchema):
