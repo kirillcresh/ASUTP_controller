@@ -10,7 +10,8 @@ from routers import (
     maintenance_router,
     param_router,
     report_router,
-state_register_router,
+    state_register_router,
+    user_router,
 )
 
 router = APIRouter()
@@ -25,3 +26,4 @@ router.include_router(history_register_router.router, tags=["History Register"])
 router.include_router(param_router.router, tags=["Param"])
 router.include_router(report_router.router, tags=["Report"])
 router.include_router(state_register_router.router, tags=["State Register"])
+router.include_router(user_router.router, tags=["User"])
