@@ -34,7 +34,7 @@ async def get_element_by_id_router(
 ):
     element = await service.get_element_by_id(
         # refresh_data=refresh_data,
-        action_id=element_id
+        element_id=element_id
     )
     if not element:
         raise HTTPException(

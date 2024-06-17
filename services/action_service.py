@@ -10,4 +10,4 @@ class ActionService(CommonResource):
         return paginate(data=actions, dto=pagination, data_schema=ActionListResponse)
 
     async def get_action_by_id(self, action_id: int):
-        return await super().get_by_id(model=Action, id=action_id)
+        return await super().get_by_id(model=Action, object_id=action_id)

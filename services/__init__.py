@@ -16,7 +16,7 @@ class CommonResource:
         result = await self.session.execute(query)
         return result.scalars().all()
 
-    async def get_by_id(self, model, id):
-        query = select(model).where(model.id == id)
+    async def get_by_id(self, model, object_id):
+        query = select(model).where(model.id == object_id)
         result = await self.session.execute(query)
         return result.scalar_one_or_none()

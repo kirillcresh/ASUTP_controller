@@ -11,5 +11,5 @@ class CurrentStateService(CommonResource):
             data=states, dto=pagination, data_schema=CurrentStateListResponse
         )
 
-    async def get_state_by_id(self, action_id: int):
-        return await super().get_by_id(model=CurrentState, id=action_id)
+    async def get_state_by_id(self, current_state_id: int):
+        return await super().get_by_id(model=CurrentState, object_id=current_state_id)

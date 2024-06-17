@@ -25,14 +25,14 @@ async def get_error_list_router(
 @router.get(
     "/{error_id}", summary="Получить Error по ID", response_model=ErrorListResponse
 )
-async def get_element_by_id_router(
+async def get_error_by_id_router(
     error_id: int,
     service: ErrorService = Depends()
     # refresh_data: GetRefreshData = Depends(SecurityManager.get_refresh_token_data),
 ):
     error = await service.get_error_by_id(
         # refresh_data=refresh_data,
-        action_id=error_id
+        error_id=error_id
     )
     if not error:
         raise HTTPException(status_code=404, detail=f"Error с ID {error_id} не найден")

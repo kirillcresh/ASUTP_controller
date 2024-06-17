@@ -9,5 +9,5 @@ class ErrorService(CommonResource):
         errors = await super().get_list(model=Error)
         return paginate(data=errors, dto=pagination, data_schema=ErrorListResponse)
 
-    async def get_error_by_id(self, action_id: int):
-        return await super().get_by_id(model=Error, id=action_id)
+    async def get_error_by_id(self, error_id: int):
+        return await super().get_by_id(model=Error, object_id=error_id)

@@ -9,5 +9,5 @@ class ElementService(CommonResource):
         elements = await super().get_list(model=Element)
         return paginate(data=elements, dto=pagination, data_schema=ElementListResponse)
 
-    async def get_element_by_id(self, action_id: int):
-        return await super().get_by_id(model=Element, id=action_id)
+    async def get_element_by_id(self, element_id: int):
+        return await super().get_by_id(model=Element, object_id=element_id)

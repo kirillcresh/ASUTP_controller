@@ -23,7 +23,9 @@ async def get_history_register_list_router(
 
 
 @router.get(
-    "/{history_register_id}", summary="Получить History Register по ID", response_model=HistoryRegisterListResponse
+    "/{history_register_id}",
+    summary="Получить History Register по ID",
+    response_model=HistoryRegisterListResponse,
 )
 async def get_history_register_by_id_router(
     history_register_id: int,
@@ -32,10 +34,11 @@ async def get_history_register_by_id_router(
 ):
     history_register = await service.get_history_register_by_id(
         # refresh_data=refresh_data,
-        action_id=history_register_id
+        history_register_id=history_register_id
     )
     if not history_register:
         raise HTTPException(
-            status_code=404, detail=f"History Register с ID {history_register_id} не найден"
+            status_code=404,
+            detail=f"History Register с ID {history_register_id} не найден",
         )
     return history_register

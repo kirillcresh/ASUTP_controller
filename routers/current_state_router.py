@@ -34,7 +34,7 @@ async def get_state_by_id_router(
 ):
     state = await service.get_state_by_id(
         # refresh_data=refresh_data,
-        action_id=state_id
+        current_state_id=state_id
     )
     if not state:
         raise HTTPException(
