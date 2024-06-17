@@ -1,5 +1,3 @@
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from models.action_model import Action
 from schemas.action_schema import ActionListResponse
 from services import CommonResource

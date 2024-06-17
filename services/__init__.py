@@ -9,9 +9,7 @@ class CommonResource:
     def __init__(self, session: AsyncSession = Depends(get_session)):
         self.session = session
 
-    async def get_list(
-        self, model, conditions=None
-    ):
+    async def get_list(self, model, conditions=None):
         query = select(model)
         if conditions:
             query = query.filter(*conditions)
