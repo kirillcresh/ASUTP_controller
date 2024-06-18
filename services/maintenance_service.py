@@ -68,16 +68,35 @@ class MaintenanceService(CommonResource):
         self, access_token_data: TokenData, pagination: PaginationRequestBodySchema
     ):
         maintenances = await super().get_list(model=MaintenanceJournal)
-        return paginate(data=maintenances, dto=pagination, data_schema=MaintenanceResponse)
+        return paginate(
+            data=maintenances, dto=pagination, data_schema=MaintenanceResponse
+        )
 
-    async def get_maintenance_by_id(self, access_token_data: TokenData, maintenance_id: int):
-        return await super().get_by_id(model=MaintenanceJournal, object_id=maintenance_id)
+    async def get_maintenance_by_id(
+        self, access_token_data: TokenData, maintenance_id: int
+    ):
+        return await super().get_by_id(
+            model=MaintenanceJournal, object_id=maintenance_id
+        )
 
-    async def delete_maintenance(self, access_token_data: TokenData, maintenance_id: int):
+    async def delete_maintenance(
+        self, access_token_data: TokenData, maintenance_id: int
+    ):
         await super().delete(model=MaintenanceJournal, object_id=maintenance_id)
 
-    async def update_maintenance(self, access_token_data: TokenData, maintenance_id: int, data_dct: MaintenanceBodySchema):
-        await super().update(model=MaintenanceJournal, object_id=maintenance_id, **data_dct.dict())
+    async def update_maintenance(
+        self,
+        access_token_data: TokenData,
+        maintenance_id: int,
+        data_dct: MaintenanceBodySchema,
+    ):
+        await super().update(
+            model=MaintenanceJournal, object_id=maintenance_id, **data_dct.dict()
+        )
 
-    async def partial_update_maintenance(self, access_token_data: TokenData, maintenance_id: int, fields: dict):
-        await super().partial_update(model=MaintenanceJournal, object_id=maintenance_id, fields=fields)
+    async def partial_update_maintenance(
+        self, access_token_data: TokenData, maintenance_id: int, fields: dict
+    ):
+        await super().partial_update(
+            model=MaintenanceJournal, object_id=maintenance_id, fields=fields
+        )

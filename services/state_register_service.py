@@ -6,11 +6,15 @@ from utils.paginate import PaginationRequestBodySchema, paginate
 
 
 class StateRegisterService(CommonResource):
-    async def get_state_register_list(self, access_token_data: TokenData, pagination: PaginationRequestBodySchema):
+    async def get_state_register_list(
+        self, access_token_data: TokenData, pagination: PaginationRequestBodySchema
+    ):
         states = await super().get_list(model=StateRegister)
         return paginate(
             data=states, dto=pagination, data_schema=StateRegisterListResponse
         )
 
-    async def get_state_register_by_id(self, access_token_data: TokenData, state_register_id: int):
+    async def get_state_register_by_id(
+        self, access_token_data: TokenData, state_register_id: int
+    ):
         return await super().get_by_id(model=StateRegister, object_id=state_register_id)

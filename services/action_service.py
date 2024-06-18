@@ -6,7 +6,9 @@ from utils.paginate import PaginationRequestBodySchema, paginate
 
 
 class ActionService(CommonResource):
-    async def get_action_list(self, access_token_data: TokenData, pagination: PaginationRequestBodySchema):
+    async def get_action_list(
+        self, access_token_data: TokenData, pagination: PaginationRequestBodySchema
+    ):
         actions = await super().get_list(model=Action)
         return paginate(data=actions, dto=pagination, data_schema=ActionListResponse)
 

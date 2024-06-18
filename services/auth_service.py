@@ -155,7 +155,8 @@ class AuthService(CommonResource):
         ).scalar_one_or_none()
         if not user:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail=f"User с ID {data_dct.id} не найден"
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"User с ID {data_dct.id} не найден",
             )
         user.name = data_dct.name if data_dct.name else user.name
         user.login = data_dct.login if data_dct.login else user.login
@@ -177,6 +178,12 @@ class AuthService(CommonResource):
     async def get_user_by_id(self, access_token_data: TokenData, user_id: int):
         return await super().get_by_id(model=User, object_id=user_id)
 
-    async def partial_update_user(self, access_token_data: TokenData, user_id: int, fields: dict):
+    async def partial_update_user(
+        self, access_token_data: TokenData, user_id: int, fields: dict
+    ):
+        if not access_token_data.is_admin:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="access forbidden",
+            )
         await super().partial_update(model=User, object_id=user_id, fields=fields)
-

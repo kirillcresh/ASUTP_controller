@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 
-from schemas.current_state_schema import CurrentStateListResponse
+from schemas.current_state_schema import CurrentStateListResponse, CurrentStateResponse
 from schemas.token_schema import  TokenData
 from services.current_state_service import CurrentStateService
 from utils.paginate import PaginationRequestBodySchema
@@ -20,6 +20,14 @@ async def get_state_list_router(
         pagination=pagination
     )
     return states
+
+
+@router.get("/get-current", summary="Получить текущее состояние со всей информацией", response_model=CurrentStateResponse)
+async def get_current_state_router(
+    service: CurrentStateService = Depends(),
+    access_token_data: TokenData = Depends(SecurityManager.get_access_token_payload),
+):
+    return await service.get_current_state(access_token_data)
 
 
 @router.get(

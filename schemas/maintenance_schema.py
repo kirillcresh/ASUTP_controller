@@ -4,9 +4,9 @@ from typing import Optional
 from pydantic import BaseModel, Field, validator
 
 
-def validate_value(value: float):
+def validate_value(value: float | None):
     decimal_places = 3
-    if round(value, decimal_places) != value:
+    if value and round(value, decimal_places) != value:
         raise ValueError(f'Значение должно содержать 3 цифры после запятой')
 
     return value
@@ -28,6 +28,7 @@ class MaintenanceBodySchema(BaseModel):
     @validator("value")
     def validate_value(cls, value: float):
         return validate_value(value)
+
 
 class PartialMaintenanceBodySchema(BaseModel):
     action_id: Optional[int] = None

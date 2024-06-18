@@ -6,7 +6,9 @@ from utils.paginate import PaginationRequestBodySchema, paginate
 
 
 class ElementService(CommonResource):
-    async def get_element_list(self, access_token_data: TokenData, pagination: PaginationRequestBodySchema):
+    async def get_element_list(
+        self, access_token_data: TokenData, pagination: PaginationRequestBodySchema
+    ):
         elements = await super().get_list(model=Element)
         return paginate(data=elements, dto=pagination, data_schema=ElementListResponse)
 

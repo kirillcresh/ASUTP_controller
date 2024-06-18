@@ -6,7 +6,9 @@ from utils.paginate import PaginationRequestBodySchema, paginate
 
 
 class ReportService(CommonResource):
-    async def get_report_list(self, access_token_data: TokenData, pagination: PaginationRequestBodySchema):
+    async def get_report_list(
+        self, access_token_data: TokenData, pagination: PaginationRequestBodySchema
+    ):
         reports = await super().get_list(model=Report)
         return paginate(data=reports, dto=pagination, data_schema=ReportListResponse)
 

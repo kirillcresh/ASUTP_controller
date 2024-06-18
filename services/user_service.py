@@ -6,7 +6,9 @@ from utils.paginate import PaginationRequestBodySchema, paginate
 
 
 class UserService(CommonResource):
-    async def get_user_list(self, access_token_data: TokenData, pagination: PaginationRequestBodySchema):
+    async def get_user_list(
+        self, access_token_data: TokenData, pagination: PaginationRequestBodySchema
+    ):
         users = await super().get_list(model=User)
         return paginate(data=users, dto=pagination, data_schema=UserListResponse)
 

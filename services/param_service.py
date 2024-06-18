@@ -6,7 +6,9 @@ from utils.paginate import PaginationRequestBodySchema, paginate
 
 
 class ParamService(CommonResource):
-    async def get_param_list(self, access_token_data: TokenData, pagination: PaginationRequestBodySchema):
+    async def get_param_list(
+        self, access_token_data: TokenData, pagination: PaginationRequestBodySchema
+    ):
         params = await super().get_list(model=Param)
         return paginate(data=params, dto=pagination, data_schema=ParamListResponse)
 

@@ -6,7 +6,9 @@ from utils.paginate import PaginationRequestBodySchema, paginate
 
 
 class HistoryRegisterService(CommonResource):
-    async def get_history_register_list(self, access_token_data: TokenData, pagination: PaginationRequestBodySchema):
+    async def get_history_register_list(
+        self, access_token_data: TokenData, pagination: PaginationRequestBodySchema
+    ):
         history_registers = await super().get_list(model=HistoryRegister)
         return paginate(
             data=history_registers,
@@ -14,7 +16,9 @@ class HistoryRegisterService(CommonResource):
             data_schema=HistoryRegisterListResponse,
         )
 
-    async def get_history_register_by_id(self, access_token_data: TokenData, history_register_id: int):
+    async def get_history_register_by_id(
+        self, access_token_data: TokenData, history_register_id: int
+    ):
         return await super().get_by_id(
             model=HistoryRegister, object_id=history_register_id
         )

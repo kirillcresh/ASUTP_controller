@@ -15,3 +15,14 @@ class CurrentStateListResponse(CurrentStateCreateUpdateSchema):
 
     class Config:
         orm_mode = True
+
+
+class CurrentStateResponse(BaseModel):
+    id: int
+    param_name: str
+    element_name: str
+    value: float
+    update_time: datetime
+
+    class Config:
+        orm_mode = True

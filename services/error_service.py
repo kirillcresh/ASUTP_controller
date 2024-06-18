@@ -6,7 +6,9 @@ from utils.paginate import PaginationRequestBodySchema, paginate
 
 
 class ErrorService(CommonResource):
-    async def get_error_list(self, access_token_data: TokenData, pagination: PaginationRequestBodySchema):
+    async def get_error_list(
+        self, access_token_data: TokenData, pagination: PaginationRequestBodySchema
+    ):
         errors = await super().get_list(model=Error)
         return paginate(data=errors, dto=pagination, data_schema=ErrorListResponse)
 
