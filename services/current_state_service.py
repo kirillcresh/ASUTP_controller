@@ -6,7 +6,7 @@ from loggers.logger import (
     get_rotating_file_handler,
     logger_decorator,
 )
-from models.current_state import CurrentState
+from models.current_state_model import CurrentState
 from models.element_model import Element
 from models.param_model import Param
 from schemas.current_state_schema import CurrentStateListResponse, CurrentStateResponse

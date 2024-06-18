@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 
-from schemas.error_schema import ErrorListResponse
+from schemas.error_schema import ErrorListResponse, ErrorInstanceResponse
 from schemas.token_schema import TokenData
 from services.error_service import ErrorService
 from utils.paginate import PaginationRequestBodySchema
@@ -23,7 +23,7 @@ async def get_error_list_router(
 
 
 @router.get(
-    "/{error_id}", summary="Получить Error по ID", response_model=ErrorListResponse
+    "/{error_id}", summary="Получить Error по ID", response_model=ErrorInstanceResponse
 )
 async def get_error_by_id_router(
     error_id: int,

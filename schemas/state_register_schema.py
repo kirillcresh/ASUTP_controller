@@ -1,6 +1,10 @@
 from datetime import datetime
+from typing import Optional
 
 from pydantic import BaseModel
+
+from schemas.element_schema import ElementListResponse
+from schemas.param_schema import ParamListResponse
 
 
 class StateRegisterCreateUpdateSchema(BaseModel):
@@ -15,3 +19,8 @@ class StateRegisterListResponse(StateRegisterCreateUpdateSchema):
 
     class Config:
         orm_mode = True
+
+
+class StateInstanceResponse(StateRegisterListResponse):
+    param: Optional[ParamListResponse]
+    element: Optional[ElementListResponse]

@@ -1,6 +1,10 @@
 from datetime import datetime
+from typing import Optional
 
 from pydantic import BaseModel
+
+from schemas.element_schema import ElementListResponse
+from schemas.param_schema import ParamListResponse
 
 
 class HistoryRegisterCreateUpdateSchema(BaseModel):
@@ -15,3 +19,8 @@ class HistoryRegisterListResponse(HistoryRegisterCreateUpdateSchema):
 
     class Config:
         orm_mode = True
+
+
+class HistoryInstanceResponse(HistoryRegisterListResponse):
+    param: Optional[ParamListResponse]
+    element: Optional[ElementListResponse]

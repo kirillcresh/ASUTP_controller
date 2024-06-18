@@ -1,8 +1,9 @@
 from typing import Dict, Any
 
 from fastapi import Depends
-from sqlalchemy import select
+from sqlalchemy import select, inspect
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 from database import get_session
 
@@ -20,6 +21,9 @@ class CommonResource:
 
     async def get_by_id(self, model, object_id):
         query = select(model).where(model.id == object_id)
+        query_join = inspect(model)
+        for rel in list(query_join.relationships):
+            query = query.options(selectinload(getattr(model, rel.key)))
         result = await self.session.execute(query)
         return result.scalar_one_or_none()
 

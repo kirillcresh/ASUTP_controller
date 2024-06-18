@@ -1,6 +1,10 @@
 from datetime import datetime
+from typing import Optional
 
 from pydantic import BaseModel
+
+from schemas.element_schema import ElementListResponse
+from schemas.param_schema import ParamListResponse
 
 
 class CurrentStateCreateUpdateSchema(BaseModel):
@@ -15,6 +19,11 @@ class CurrentStateListResponse(CurrentStateCreateUpdateSchema):
 
     class Config:
         orm_mode = True
+
+
+class CurrentStateInstanceResponse(CurrentStateListResponse):
+    param: Optional[ParamListResponse]
+    element: Optional[ElementListResponse]
 
 
 class CurrentStateResponse(BaseModel):

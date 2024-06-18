@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, Numeric
+from sqlalchemy.orm import relationship
 
 from database import Base
 
@@ -19,3 +20,6 @@ class CurrentState(Base):
         default=datetime.utcnow,
         nullable=False,
     )
+
+    param = relationship("Param", backref="current_state")
+    element = relationship("Element", backref="current_state")

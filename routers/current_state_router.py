@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 
-from schemas.current_state_schema import CurrentStateListResponse, CurrentStateResponse
+from schemas.current_state_schema import CurrentStateListResponse, CurrentStateResponse, CurrentStateInstanceResponse
 from schemas.token_schema import  TokenData
 from services.current_state_service import CurrentStateService
 from utils.paginate import PaginationRequestBodySchema
@@ -33,7 +33,7 @@ async def get_current_state_router(
 @router.get(
     "/{state_id}",
     summary="Получить Current State по ID",
-    response_model=CurrentStateListResponse,
+    response_model=CurrentStateInstanceResponse,
 )
 async def get_state_by_id_router(
     state_id: int,

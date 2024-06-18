@@ -6,7 +6,7 @@ class UserCreateUpdateSchema(BaseModel):
     login: str
     password: str
     is_admin: bool
-    refresh_token: str
+    refresh_token: str | None
 
 
 class UserListResponse(UserCreateUpdateSchema):

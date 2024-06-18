@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Body, Depends, HTTPException
 
-from schemas.maintenance_schema import MaintenanceBodySchema, PartialMaintenanceBodySchema
+from schemas.maintenance_schema import MaintenanceBodySchema, PartialMaintenanceBodySchema, MaintenanceInstanceResponse
 from schemas.token_schema import TokenData
 from services.maintenance_service import MaintenanceService
 from utils.paginate import PaginationRequestBodySchema
@@ -90,7 +90,7 @@ async def update_maintenance(
     return maintence
 
 
-@router.patch("/maintenance/{maintenance_id}", summary="Обновление записи в журнале обслуживания")
+@router.patch("/maintenance/{maintenance_id}", summary="Обновление записи в журнале обслуживания", response_model=MaintenanceInstanceResponse)
 async def partial_update_maintenance(
     maintenance_id: int,
     access_token_data: TokenData = Depends(SecurityManager.get_access_token_payload),

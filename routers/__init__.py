@@ -17,7 +17,7 @@ from routers import (
 router = APIRouter()
 
 router.include_router(auth_router.router, tags=["Auth"])
-router.include_router(maintenance_router.router, tags=["Crud"])
+router.include_router(maintenance_router.router, tags=["Maintenance Journal"])
 router.include_router(action_router.router, tags=["Action"])
 router.include_router(current_state_router.router, tags=["Current State"])
 router.include_router(element_router.router, tags=["Element"])

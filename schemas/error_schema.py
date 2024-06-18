@@ -1,6 +1,9 @@
 from datetime import datetime
+from typing import Optional
 
 from pydantic import BaseModel
+
+from schemas.user_schema import UserListResponse
 
 
 class ErrorCreateUpdateSchema(BaseModel):
@@ -14,3 +17,7 @@ class ErrorListResponse(ErrorCreateUpdateSchema):
 
     class Config:
         orm_mode = True
+
+
+class ErrorInstanceResponse(ErrorListResponse):
+    user: Optional[UserListResponse]

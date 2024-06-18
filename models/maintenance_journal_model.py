@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, Numeric, Text
+from sqlalchemy.orm import relationship
 
 from database import Base
 
@@ -26,3 +27,6 @@ class MaintenanceJournal(Base):
         default=datetime.utcnow,
         nullable=False,
     )
+
+    action = relationship("Action", backref="maintenance_journal")
+    user = relationship("User", backref="maintenance_journal")

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 
-from schemas.state_register_schema import StateRegisterListResponse
+from schemas.state_register_schema import StateRegisterListResponse, StateInstanceResponse
 from schemas.token_schema import TokenData
 from services.state_register_service import StateRegisterService
 from utils.paginate import PaginationRequestBodySchema
@@ -25,7 +25,7 @@ async def get_state_register_list_router(
 @router.get(
     "/{state_id}",
     summary="Получить State Register по ID",
-    response_model=StateRegisterListResponse,
+    response_model=StateInstanceResponse,
 )
 async def get_state_register_by_id_router(
     state_id: int,

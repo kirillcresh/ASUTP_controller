@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 
-from schemas.report_schema import ReportListResponse
+from schemas.report_schema import ReportListResponse, ReportInstanceResponse
 from schemas.token_schema import TokenData
 from services.report_service import ReportService
 from utils.paginate import PaginationRequestBodySchema
@@ -25,7 +25,7 @@ async def get_report_list_router(
 @router.get(
     "/{report_id}",
     summary="Получить Report по ID",
-    response_model=ReportListResponse,
+    response_model=ReportInstanceResponse,
 )
 async def get_report_by_id_router(
     report_id: int,

@@ -1,6 +1,9 @@
 from datetime import datetime
+from typing import Optional
 
 from pydantic import BaseModel
+
+from schemas.user_schema import UserListResponse
 
 
 class ReportCreateUpdateSchema(BaseModel):
@@ -14,3 +17,7 @@ class ReportListResponse(ReportCreateUpdateSchema):
 
     class Config:
         orm_mode = True
+
+
+class ReportInstanceResponse(ReportListResponse):
+    user: Optional[UserListResponse]

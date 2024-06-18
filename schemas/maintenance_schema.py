@@ -3,6 +3,9 @@ from typing import Optional
 
 from pydantic import BaseModel, Field, validator
 
+from schemas.action_schema import ActionListResponse
+from schemas.user_schema import UserListResponse
+
 
 def validate_value(value: float | None):
     decimal_places = 3
@@ -47,3 +50,8 @@ class MaintenanceResponse(MaintenanceBodySchema):
 
     class Config:
         orm_mode = True
+
+
+class MaintenanceInstanceResponse(MaintenanceResponse):
+    action: Optional[ActionListResponse]
+    user: Optional[UserListResponse]
