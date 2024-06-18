@@ -24,3 +24,14 @@ class HistoryRegisterListResponse(HistoryRegisterCreateUpdateSchema):
 class HistoryInstanceResponse(HistoryRegisterListResponse):
     param: Optional[ParamListResponse]
     element: Optional[ElementListResponse]
+
+
+class CSVHistoryResponse(BaseModel):
+    id: int
+    param: Optional[ParamListResponse]
+    element: Optional[ElementListResponse]
+    value: float
+    date_created: datetime
+
+    class Config:
+        orm_mode = True

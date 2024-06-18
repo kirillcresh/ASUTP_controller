@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 
-from schemas.user_schema import UserListResponse
 from schemas.token_schema import TokenData
+from schemas.user_schema import UserListResponse
 from services.user_service import UserService
 from utils.paginate import PaginationRequestBodySchema
 from utils.security_manager import SecurityManager
@@ -16,8 +16,7 @@ async def get_user_list_router(
     pagination: PaginationRequestBodySchema = Depends(),
 ):
     users = await service.get_user_list(
-        access_token_data=access_token_data,
-        pagination=pagination
+        access_token_data=access_token_data, pagination=pagination
     )
     return users
 
@@ -31,14 +30,10 @@ async def get_user_by_id_router(
     user_id: int,
     service: UserService = Depends(),
     access_token_data: TokenData = Depends(SecurityManager.get_access_token_payload),
-
 ):
     user = await service.get_user_by_id(
-        access_token_data=access_token_data,
-        user_id=user_id
+        access_token_data=access_token_data, user_id=user_id
     )
     if not user:
-        raise HTTPException(
-            status_code=404, detail=f"Param с ID {user_id} не найден"
-        )
+        raise HTTPException(status_code=404, detail=f"Param с ID {user_id} не найден")
     return user

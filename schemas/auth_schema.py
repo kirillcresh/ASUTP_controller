@@ -66,9 +66,7 @@ class UpdateUserSchema(BaseModel):
         max_length=255,
         default="User ASUTP",
     )
-    login: str = Field(
-        description="Логин пользователя", min_length=3, max_length=32
-    )
+    login: str = Field(description="Логин пользователя", min_length=3, max_length=32)
     password: str = Field(
         description="Пароль пользователя", min_length=8, max_length=64
     )

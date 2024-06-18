@@ -16,8 +16,7 @@ async def get_element_list_router(
     pagination: PaginationRequestBodySchema = Depends(),
 ):
     elements = await service.get_element_list(
-        access_token_data=access_token_data,
-        pagination=pagination
+        access_token_data=access_token_data, pagination=pagination
     )
     return elements
 
@@ -33,8 +32,7 @@ async def get_element_by_id_router(
     access_token_data: TokenData = Depends(SecurityManager.get_access_token_payload),
 ):
     element = await service.get_element_by_id(
-        access_token_data=access_token_data,
-        element_id=element_id
+        access_token_data=access_token_data, element_id=element_id
     )
     if not element:
         raise HTTPException(

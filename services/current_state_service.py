@@ -15,7 +15,6 @@ from services import CommonResource
 from settings import settings
 from utils.paginate import PaginationRequestBodySchema, paginate
 
-
 logger = get_custom_logger(
     logger_name=__name__,
     handlers=[
@@ -42,17 +41,15 @@ class CurrentStateService(CommonResource):
         return await super().get_by_id(model=CurrentState, object_id=current_state_id)
 
     async def get_current_state(self, access_token_data: TokenData):
-        state = (
-            await self.session.execute(
-                select(
-                    CurrentState.id,
-                    CurrentState.value,
-                    CurrentState.update_time,
-                    Param.name.label("param_name"),
-                    Element.name.label("element_name"),
-                )
-                .join(Param, Param.id == CurrentState.param_id)
-                .join(Element, Element.id == CurrentState.element_id)
+        state = await self.session.execute(
+            select(
+                CurrentState.id,
+                CurrentState.value,
+                CurrentState.update_time,
+                Param.name.label("param_name"),
+                Element.name.label("element_name"),
             )
+            .join(Param, Param.id == CurrentState.param_id)
+            .join(Element, Element.id == CurrentState.element_id)
         )
         return state.first()

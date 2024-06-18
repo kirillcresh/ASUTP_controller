@@ -10,7 +10,7 @@ from schemas.user_schema import UserListResponse
 def validate_value(value: float | None):
     decimal_places = 3
     if value and round(value, decimal_places) != value:
-        raise ValueError(f'Значение должно содержать 3 цифры после запятой')
+        raise ValueError(f"Значение должно содержать 3 цифры после запятой")
 
     return value
 

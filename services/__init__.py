@@ -1,7 +1,7 @@
-from typing import Dict, Any
+from typing import Any, Dict
 
 from fastapi import Depends
-from sqlalchemy import select, inspect
+from sqlalchemy import inspect, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -16,6 +16,9 @@ class CommonResource:
         query = select(model)
         if conditions:
             query = query.filter(*conditions)
+        query_join = inspect(model)
+        for rel in list(query_join.relationships):
+            query = query.options(selectinload(getattr(model, rel.key)))
         result = await self.session.execute(query)
         return result.scalars().all()
 

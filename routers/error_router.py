@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 
-from schemas.error_schema import ErrorListResponse, ErrorInstanceResponse
+from schemas.error_schema import ErrorInstanceResponse, ErrorListResponse
 from schemas.token_schema import TokenData
 from services.error_service import ErrorService
 from utils.paginate import PaginationRequestBodySchema
@@ -16,8 +16,7 @@ async def get_error_list_router(
     pagination: PaginationRequestBodySchema = Depends(),
 ):
     errors = await service.get_error_list(
-        access_token_data=access_token_data,
-        pagination=pagination
+        access_token_data=access_token_data, pagination=pagination
     )
     return errors
 
@@ -31,8 +30,7 @@ async def get_error_by_id_router(
     access_token_data: TokenData = Depends(SecurityManager.get_access_token_payload),
 ):
     error = await service.get_error_by_id(
-        access_token_data=access_token_data,
-        error_id=error_id
+        access_token_data=access_token_data, error_id=error_id
     )
     if not error:
         raise HTTPException(status_code=404, detail=f"Error с ID {error_id} не найден")

@@ -1,6 +1,12 @@
-from fastapi import APIRouter, Depends, HTTPException
+from datetime import date
 
-from schemas.state_register_schema import StateRegisterListResponse, StateInstanceResponse
+from fastapi import APIRouter, Depends, HTTPException
+from starlette.responses import StreamingResponse
+
+from schemas.state_register_schema import (
+    StateInstanceResponse,
+    StateRegisterListResponse,
+)
 from schemas.token_schema import TokenData
 from services.state_register_service import StateRegisterService
 from utils.paginate import PaginationRequestBodySchema
@@ -16,10 +22,23 @@ async def get_state_register_list_router(
     pagination: PaginationRequestBodySchema = Depends(),
 ):
     states = await service.get_state_register_list(
-        access_token_data=access_token_data,
-        pagination=pagination
+        access_token_data=access_token_data, pagination=pagination
     )
     return states
+
+
+@router.get(
+    "/csv", summary="Список State Register в csv файл", response_class=StreamingResponse
+)
+async def get_history_register_list_router(
+    date_from: str | date,
+    date_to: str | date,
+    service: StateRegisterService = Depends(),
+    access_token_data: TokenData = Depends(SecurityManager.get_access_token_payload),
+):
+    return await service.get_state_csv(
+        date_from=date_from, date_to=date_to, access_token_data=access_token_data
+    )
 
 
 @router.get(
@@ -33,8 +52,7 @@ async def get_state_register_by_id_router(
     access_token_data: TokenData = Depends(SecurityManager.get_access_token_payload),
 ):
     state = await service.get_state_register_by_id(
-        access_token_data=access_token_data,
-        state_register_id=state_id
+        access_token_data=access_token_data, state_register_id=state_id
     )
     if not state:
         raise HTTPException(

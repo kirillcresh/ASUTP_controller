@@ -2,9 +2,11 @@ from datetime import datetime
 
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, Numeric
 from sqlalchemy.orm import relationship
-from .param_model import Param
-from .element_model import Element
+
 from database import Base
+
+from .element_model import Element
+from .param_model import Param
 
 
 class StateRegister(Base):

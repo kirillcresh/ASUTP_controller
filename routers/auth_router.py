@@ -3,9 +3,10 @@ from fastapi import APIRouter, Body, Depends, HTTPException
 from schemas.auth_schema import (
     AuthorizationResponse,
     LoginBodySchema,
+    PartialUpdateUserSchema,
     RegistrationBodySchema,
     RegistrationResponse,
-    UpdateUserSchema, PartialUpdateUserSchema,
+    UpdateUserSchema,
 )
 from schemas.token_schema import GetRefreshData, TokenData
 from services.auth_service import AuthService
@@ -97,19 +98,14 @@ async def partial_update_user(
     data_dct: PartialUpdateUserSchema = Body(),
 ):
     user = await service.get_user_by_id(
-        access_token_data=access_token_data,
-        user_id=user_id
+        access_token_data=access_token_data, user_id=user_id
     )
     if not user:
-        raise HTTPException(
-            status_code=404, detail=f"User с ID {user_id} не найден"
-        )
+        raise HTTPException(status_code=404, detail=f"User с ID {user_id} не найден")
     await service.partial_update_user(
-        access_token_data=access_token_data,
-        user_id=user_id,
-        fields=data_dct.dict()
+        access_token_data=access_token_data, user_id=user_id, fields=data_dct.dict()
     )
     user = await service.get_user_by_id(
-        access_token_data=access_token_data,
-        user_id=user_id)
+        access_token_data=access_token_data, user_id=user_id
+    )
     return user

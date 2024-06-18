@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 
-from schemas.report_schema import ReportListResponse, ReportInstanceResponse
+from schemas.report_schema import ReportInstanceResponse, ReportListResponse
 from schemas.token_schema import TokenData
 from services.report_service import ReportService
 from utils.paginate import PaginationRequestBodySchema
@@ -16,8 +16,7 @@ async def get_report_list_router(
     pagination: PaginationRequestBodySchema = Depends(),
 ):
     reports = await service.get_report_list(
-        access_token_data=access_token_data,
-        pagination=pagination
+        access_token_data=access_token_data, pagination=pagination
     )
     return reports
 
@@ -33,8 +32,7 @@ async def get_report_by_id_router(
     access_token_data: TokenData = Depends(SecurityManager.get_access_token_payload),
 ):
     report = await service.get_report_by_id(
-        access_token_data=access_token_data,
-        report_id=report_id
+        access_token_data=access_token_data, report_id=report_id
     )
     if not report:
         raise HTTPException(

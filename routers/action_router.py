@@ -16,8 +16,7 @@ async def get_action_list_router(
     pagination: PaginationRequestBodySchema = Depends(),
 ):
     actions = await service.get_action_list(
-        access_token_data=access_token_data,
-        pagination=pagination
+        access_token_data=access_token_data, pagination=pagination
     )
     return actions
 
@@ -31,8 +30,7 @@ async def get_action_by_id(
     access_token_data: TokenData = Depends(SecurityManager.get_access_token_payload),
 ):
     action = await service.get_action_by_id(
-        access_token_data=access_token_data,
-        action_id=action_id
+        access_token_data=access_token_data, action_id=action_id
     )
     if not action:
         raise HTTPException(

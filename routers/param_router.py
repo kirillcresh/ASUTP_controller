@@ -16,8 +16,7 @@ async def get_param_list_router(
     pagination: PaginationRequestBodySchema = Depends(),
 ):
     params = await service.get_param_list(
-        access_token_data=access_token_data,
-        pagination=pagination
+        access_token_data=access_token_data, pagination=pagination
     )
     return params
 
@@ -33,11 +32,8 @@ async def get_param_by_id_router(
     access_token_data: TokenData = Depends(SecurityManager.get_access_token_payload),
 ):
     param = await service.get_param_by_id(
-        access_token_data=access_token_data,
-        param_id=param_id
+        access_token_data=access_token_data, param_id=param_id
     )
     if not param:
-        raise HTTPException(
-            status_code=404, detail=f"Param с ID {param_id} не найден"
-        )
+        raise HTTPException(status_code=404, detail=f"Param с ID {param_id} не найден")
     return param

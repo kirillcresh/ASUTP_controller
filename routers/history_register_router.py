@@ -1,6 +1,14 @@
-from fastapi import APIRouter, Depends, HTTPException
+import csv
+from datetime import date
+from io import BytesIO, StringIO
 
-from schemas.history_register_schema import HistoryRegisterListResponse, HistoryInstanceResponse
+from fastapi import APIRouter, Depends, HTTPException
+from starlette.responses import FileResponse, StreamingResponse
+
+from schemas.history_register_schema import (
+    HistoryInstanceResponse,
+    HistoryRegisterListResponse,
+)
 from schemas.token_schema import TokenData
 from services.history_register_service import HistoryRegisterService
 from utils.paginate import PaginationRequestBodySchema
@@ -16,23 +24,25 @@ async def get_history_register_list_router(
     pagination: PaginationRequestBodySchema = Depends(),
 ):
     history_registers = await service.get_history_register_list(
-        access_token_data=access_token_data,
-        pagination=pagination
+        access_token_data=access_token_data, pagination=pagination
     )
     return history_registers
 
 
-@router.get("/csv", summary="Список History Register")
+@router.get(
+    "/csv",
+    summary="Список History Register в csv файл",
+    response_class=StreamingResponse,
+)
 async def get_history_register_list_router(
+    date_from: str | date,
+    date_to: str | date,
     service: HistoryRegisterService = Depends(),
     access_token_data: TokenData = Depends(SecurityManager.get_access_token_payload),
-    pagination: PaginationRequestBodySchema = Depends(),
 ):
-    history_registers = await service.get_history_register_list(
-        access_token_data=access_token_data,
-        pagination=pagination
+    return await service.get_history_csv(
+        date_from=date_from, date_to=date_to, access_token_data=access_token_data
     )
-    return history_registers
 
 
 @router.get(
@@ -46,8 +56,7 @@ async def get_history_register_by_id_router(
     access_token_data: TokenData = Depends(SecurityManager.get_access_token_payload),
 ):
     history_register = await service.get_history_register_by_id(
-        access_token_data=access_token_data,
-        history_register_id=history_register_id
+        access_token_data=access_token_data, history_register_id=history_register_id
     )
     if not history_register:
         raise HTTPException(

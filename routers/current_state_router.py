@@ -1,7 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
 
-from schemas.current_state_schema import CurrentStateListResponse, CurrentStateResponse, CurrentStateInstanceResponse
-from schemas.token_schema import  TokenData
+from schemas.current_state_schema import (
+    CurrentStateInstanceResponse,
+    CurrentStateListResponse,
+    CurrentStateResponse,
+)
+from schemas.token_schema import TokenData
 from services.current_state_service import CurrentStateService
 from utils.paginate import PaginationRequestBodySchema
 from utils.security_manager import SecurityManager
@@ -16,13 +20,16 @@ async def get_state_list_router(
     pagination: PaginationRequestBodySchema = Depends(),
 ):
     states = await service.get_state_list(
-        access_token_data=access_token_data,
-        pagination=pagination
+        access_token_data=access_token_data, pagination=pagination
     )
     return states
 
 
-@router.get("/get-current", summary="Получить текущее состояние со всей информацией", response_model=CurrentStateResponse)
+@router.get(
+    "/get-current",
+    summary="Получить текущее состояние со всей информацией",
+    response_model=CurrentStateResponse,
+)
 async def get_current_state_router(
     service: CurrentStateService = Depends(),
     access_token_data: TokenData = Depends(SecurityManager.get_access_token_payload),
@@ -41,8 +48,7 @@ async def get_state_by_id_router(
     access_token_data: TokenData = Depends(SecurityManager.get_access_token_payload),
 ):
     state = await service.get_state_by_id(
-        access_token_data=access_token_data,
-        current_state_id=state_id
+        access_token_data=access_token_data, current_state_id=state_id
     )
     if not state:
         raise HTTPException(
